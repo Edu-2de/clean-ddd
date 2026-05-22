@@ -1,4 +1,4 @@
-import { expect, it, test } from 'vitest';
+import { expect, it } from 'vitest';
 import { AnswerQuestionUseCase } from './answer-question.js';
 
 it('should be able to create an answer', () => {
@@ -6,7 +6,7 @@ it('should be able to create an answer', () => {
 
   const answer = answerQuestion.execute({
     instructorId: '1',
-    questionId: '2',
+    questionId: '1',
     content: 'content',
   });
 

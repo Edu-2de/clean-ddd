@@ -4,7 +4,6 @@ interface AnswerProps {
   content: string;
   authorId: string;
   questionId: string;
-  id?: string;
 }
 
 export class Answer {
@@ -13,10 +12,10 @@ export class Answer {
   public authorId: string;
   public questionId: string;
 
-  constructor({ content, authorId, questionId, id }: AnswerProps) {
-    this.content = content;
-    this.authorId = authorId;
-    this.questionId = questionId;
+  constructor(props: AnswerProps, id?: string) {
+    this.content = props.content;
+    this.authorId = props.authorId;
+    this.questionId = props.questionId;
     this.id = id ?? randomUUID();
   }
 }

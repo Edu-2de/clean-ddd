@@ -1,15 +1,10 @@
 import { randomUUID } from 'node:crypto';
 
-interface InstructorProps {
-  name: string;
-  id?: string;
-}
-
 export class Instructor {
   public id: string;
   public name: string;
 
-  constructor({ name, id }: InstructorProps) {
+  constructor(name: string, id?: string) {
     this.name = name;
     this.id = id ?? randomUUID();
   }
