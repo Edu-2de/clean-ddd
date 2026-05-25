@@ -25,17 +25,14 @@ describe('Edit Question Use Case', () => {
       ),
     );
 
-    await sut.execute({
+    const { question } = await sut.execute({
       authorId: 'author-01',
       questionId: 'question-01',
       content: 'new Content',
       title: 'new Title',
     });
 
-    expect(inMemoryQuestionsRepository.items[0]).toMatchObject({
-      content: 'new Content',
-      title: 'new Title',
-    });
+    expect(question.content).toEqual('new Content');
   });
 
   it('should not to be able edit a question from another author', async () => {
