@@ -15,15 +15,6 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     return question;
   }
 
-  async delete(question: Question) {
-    const questionIndex = this.items.findIndex(
-      (questionItem) => questionItem.id === question.id,
-    );
-    if (questionIndex > -1) {
-      this.items.splice(questionIndex, 1);
-    }
-  }
-
   async findBySlug(slug: string) {
     const question = this.items.find(
       (question) => question.slug.value === slug,
@@ -36,5 +27,23 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
   async create(question: Question) {
     this.items.push(question);
+  }
+
+  async save(question: Question) {
+    const questionIndex = this.items.findIndex(
+      (questionItem) => questionItem.id === question.id,
+    );
+    if (questionIndex > -1) {
+      this.items[questionIndex] = question;
+    }
+  }
+
+  async delete(question: Question) {
+    const questionIndex = this.items.findIndex(
+      (questionItem) => questionItem.id === question.id,
+    );
+    if (questionIndex > -1) {
+      this.items.splice(questionIndex, 1);
+    }
   }
 }
