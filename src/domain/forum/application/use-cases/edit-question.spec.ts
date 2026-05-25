@@ -45,7 +45,7 @@ describe('Edit Question Use Case', () => {
       ),
     );
 
-    expect(() =>
+    await expect(() =>
       sut.execute({
         authorId: 'author-02',
         content: 'content-new',

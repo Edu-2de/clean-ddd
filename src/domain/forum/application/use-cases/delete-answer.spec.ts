@@ -37,7 +37,7 @@ describe('Delete Answer Use Case', () => {
       ),
     );
 
-    expect(() =>
+    await expect(() =>
       sut.execute({
         answerId: 'answer-01',
         authorId: 'author-02',
