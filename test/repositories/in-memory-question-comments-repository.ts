@@ -1,3 +1,4 @@
+import type { PaginationParams } from '@/core/repositories/pagination-params.js';
 import type { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository.js';
 import type { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment.js';
 
@@ -5,6 +6,7 @@ export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepos
   public items: QuestionComment[] = [];
 
   constructor() {}
+
   async findById(id: string) {
     const questionComment = this.items.find(
       (questionComment) => questionComment.id.toString() === id,
@@ -13,6 +15,22 @@ export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepos
       return null;
     }
     return questionComment;
+  }
+
+  async finManyByQuestionId(questionId: string, { page }: PaginationParams) {
+    const questionComments = this.items
+      .filter(
+        (questionComment) =>
+          questionComment.questionId.toString() === questionId,
+      )
+      .sort(
+        (questionComment1, questionComment2) =>
+          questionComment1.createdAt.getTime() -
+          questionComment2.createdAt.getTime(),
+      )
+      .slice((page - 1) * 20, page * 20);
+
+    return questionComments;
   }
 
   async create(questionComment: QuestionComment) {
