@@ -3,6 +3,7 @@ import { beforeEach, describe, it } from 'vitest';
 import { makeAnswer } from '../../../../../test/factories/make-answer.js';
 import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js';
 import { DeleteAnswerUseCase } from './delete-answer.js';
+import { NotAllowedError } from './errors/not-allowed-error.js';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let sut: DeleteAnswerUseCase;
@@ -21,7 +22,7 @@ describe('Delete Answer Use Case', () => {
       ),
     );
 
-    await sut.execute({
+    const result = await sut.execute({
       answerId: 'answer-01',
       authorId: 'author-01',
     });
@@ -37,11 +38,12 @@ describe('Delete Answer Use Case', () => {
       ),
     );
 
-    await expect(() =>
-      sut.execute({
-        answerId: 'answer-01',
-        authorId: 'author-02',
-      }),
-    ).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      answerId: 'answer-01',
+      authorId: 'author-02',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 });

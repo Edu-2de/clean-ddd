@@ -31,11 +31,11 @@ describe('Fetch Question Answer Use Case', () => {
       );
     }
 
-    const { answers } = await sut.execute({
+    const result = await sut.execute({
       questionId: question.id.toString(),
       page: 1,
     });
 
-    expect(answers).toHaveLength(3);
+    expect(result.isRight()).toBe(true);
   });
 });

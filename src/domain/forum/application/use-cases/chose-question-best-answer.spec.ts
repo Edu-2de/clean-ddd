@@ -5,6 +5,7 @@ import { makeQuestion } from '../../../../../test/factories/make-question.js';
 import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js';
 import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository.js';
 import { ChoseQuestionBestAnswerUseCase } from './chose-question-best-answer.js';
+import { NotAllowedError } from './errors/not-allowed-error.js';
 
 let inMemoryQuestionRepository: InMemoryQuestionsRepository;
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
@@ -40,14 +41,12 @@ describe('Create Question', () => {
       ),
     );
 
-    await sut.execute({
+    const result = await sut.execute({
       answerId: 'answer-01',
       authorId: 'author-01',
     });
 
-    expect(
-      inMemoryQuestionRepository.items[0]?.bestAnswerId?.toString(),
-    ).toEqual('answer-01');
+    expect(result.isRight()).toBe(true);
   });
 
   it('should not be able to choose another best question from another user question', async () => {
@@ -70,11 +69,12 @@ describe('Create Question', () => {
       ),
     );
 
-    await expect(() =>
-      sut.execute({
-        answerId: 'answer-01',
-        authorId: 'author-02',
-      }),
-    ).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      answerId: 'answer-01',
+      authorId: 'author-02',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 });

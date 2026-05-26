@@ -3,6 +3,7 @@ import { beforeEach, describe } from 'vitest';
 import { makeQuestion } from '../../../../../test/factories/make-question.js';
 import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository.js';
 import { DeleteQuestionUseCase } from './delete-question.js';
+import { NotAllowedError } from './errors/not-allowed-error.js';
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let sut: DeleteQuestionUseCase;
@@ -21,11 +22,12 @@ describe('Delete Question Use Case', () => {
       ),
     );
 
-    await sut.execute({
+    const result = await sut.execute({
       authorId: 'author-01',
       questionId: 'question-01',
     });
 
+    expect(result.isRight()).toBe(true);
     expect(inMemoryQuestionsRepository.items).toHaveLength(0);
   });
 
@@ -37,11 +39,12 @@ describe('Delete Question Use Case', () => {
       ),
     );
 
-    await expect(() =>
-      sut.execute({
-        authorId: 'author-02',
-        questionId: 'question-01',
-      }),
-    ).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      authorId: 'author-02',
+      questionId: 'question-01',
+    });
+
+    expect(result.isRight()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 });

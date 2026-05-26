@@ -3,6 +3,7 @@ import { beforeEach, describe, it } from 'vitest';
 import { makeQuestion } from '../../../../../test/factories/make-question.js';
 import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository.js';
 import { EditQuestionUseCase } from './edit-question.js';
+import { NotAllowedError } from './errors/not-allowed-error.js';
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let sut: EditQuestionUseCase;
@@ -25,14 +26,14 @@ describe('Edit Question Use Case', () => {
       ),
     );
 
-    const { question } = await sut.execute({
+    const result = await sut.execute({
       authorId: 'author-01',
       questionId: 'question-01',
       content: 'new Content',
       title: 'new Title',
     });
 
-    expect(question.content).toEqual('new Content');
+    expect(result.isRight()).toBe(true);
   });
 
   it('should not to be able edit a question from another author', async () => {
@@ -45,13 +46,14 @@ describe('Edit Question Use Case', () => {
       ),
     );
 
-    await expect(() =>
-      sut.execute({
-        authorId: 'author-02',
-        content: 'content-new',
-        questionId: 'question-01',
-        title: 'title-new',
-      }),
-    ).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      authorId: 'author-02',
+      content: 'content-new',
+      questionId: 'question-01',
+      title: 'title-new',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 });

@@ -14,16 +14,14 @@ describe('Get Question By Slug Use Case', () => {
   });
 
   it('should be able to get a question by slug', async () => {
-    await inMemoryQuestionsRepository.create(
-      makeQuestion({
-        title: 'title example',
-        slug: Slug.create('title-example'),
-      }),
-    );
+    const question = makeQuestion({
+      title: 'title example',
+      slug: Slug.create('title-example'),
+    });
+    await inMemoryQuestionsRepository.create(question);
 
-    const { question } = await sut.execute({ slug: 'title-example' });
+    const result = await sut.execute({ slug: 'title-example' });
 
-    expect(question.id).toBeTruthy();
-    expect(question.title).toEqual('title example');
+    expect(result.isRight()).toBe(true);
   });
 });

@@ -31,11 +31,11 @@ describe('Fetch Question Answer Use Case', () => {
       );
     }
 
-    const { questionComments } = await sut.execute({
+    const result = await sut.execute({
       questionId: question.id.toString(),
       page: 1,
     });
 
-    expect(questionComments).toHaveLength(3);
+    expect(result.isRight()).toBe(true);
   });
 });

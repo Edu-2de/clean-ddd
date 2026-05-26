@@ -1,15 +1,20 @@
+import { left, right, type Either } from '@/core/either.js';
 import type { Answer } from '../../enterprise/entities/answer.js';
 import type { AnswersRepository } from '../repositories/answers-repository.js';
 import type { QuestionsRepository } from '../repositories/questions-repository.js';
+import { ResourceNotFoundError } from './errors/resource-not-found-error.js';
 
 interface FetchQuestionAnswersRequest {
   questionId: string;
   page: number;
 }
 
-interface FetchQuestionAnswersResponse {
-  answers: Answer[];
-}
+type FetchQuestionAnswersResponse = Either<
+  ResourceNotFoundError,
+  {
+    answers: Answer[];
+  }
+>;
 
 export class FetchQuestionAnswers {
   constructor(
@@ -22,13 +27,15 @@ export class FetchQuestionAnswers {
     page,
   }: FetchQuestionAnswersRequest): Promise<FetchQuestionAnswersResponse> {
     const question = await this.questionsRepository.findById(questionId);
-    if (!question) throw new Error('Question not found');
+    if (!question) {
+      return left(new ResourceNotFoundError());
+    }
 
     const answers = await this.answersRepository.findManyByQuestionId(
       questionId,
       { page },
     );
 
-    return { answers };
+    return right({ answers });
   }
 }
