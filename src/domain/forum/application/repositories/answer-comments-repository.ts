@@ -1,5 +1,7 @@
 import type { AnswerComment } from '../../enterprise/entities/answer-comment.js';
 
 export interface AnswerCommentsRepository {
-  create(answercomment: AnswerComment): Promise<void>;
+  findById(id: string): Promise<AnswerComment | null>;
+  create(answerComment: AnswerComment): Promise<void>;
+  delete(answerComment: AnswerComment): Promise<void>;
 }

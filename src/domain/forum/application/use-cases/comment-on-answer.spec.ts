@@ -1,16 +1,16 @@
 import { beforeEach, describe } from 'vitest';
 import { makeAnswer } from '../../../../../test/factories/make-answer.js';
-import { InMemoryAnswerCommentsRepository } from '../../../../../test/repositories/in-memory-answer-comments-repository.js';
+import { InMemoryAnswersCommentsRepository } from '../../../../../test/repositories/in-memory-answers-comments-repository.js';
 import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js';
 import { CommentOnAnswerUseCase } from './comment-on-answer.js';
 
-let inMemoryAnswerCommentsRepository: InMemoryAnswerCommentsRepository;
+let inMemoryAnswerCommentsRepository: InMemoryAnswersCommentsRepository;
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let sut: CommentOnAnswerUseCase;
 
 describe('Comment On Answer Use Case', () => {
   beforeEach(() => {
-    inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository();
+    inMemoryAnswerCommentsRepository = new InMemoryAnswersCommentsRepository();
     inMemoryAnswersRepository = new InMemoryAnswersRepository();
     sut = new CommentOnAnswerUseCase(
       inMemoryAnswersRepository,
