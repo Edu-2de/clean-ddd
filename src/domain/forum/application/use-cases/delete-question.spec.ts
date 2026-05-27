@@ -1,16 +1,23 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.js';
 import { beforeEach, describe } from 'vitest';
 import { makeQuestion } from '../../../../../test/factories/make-question.js';
+import { InMemoryQuestionAttachmentsRepository } from '../../../../../test/repositories/in-memory-question-attachments-repository.js';
 import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository.js';
 import { DeleteQuestionUseCase } from './delete-question.js';
 import { NotAllowedError } from './errors/not-allowed-error.js';
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let sut: DeleteQuestionUseCase;
 
 describe('Delete Question Use Case', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository();
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    );
+
     sut = new DeleteQuestionUseCase(inMemoryQuestionsRepository);
   });
 

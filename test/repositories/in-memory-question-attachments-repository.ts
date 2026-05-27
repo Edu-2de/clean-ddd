@@ -1,5 +1,5 @@
 import type { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments-repository.js';
-import type { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment.js';
+import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment.js';
 
 export class InMemoryQuestionAttachmentsRepository implements QuestionAttachmentsRepository {
   public items: QuestionAttachment[] = [];
@@ -13,5 +13,14 @@ export class InMemoryQuestionAttachmentsRepository implements QuestionAttachment
     );
 
     return questionAttachments;
+  }
+
+  async deleteManyByQuestionId(questionId: string) {
+    const questionAttachaments = this.items.filter(
+      (questionAttachment) =>
+        questionAttachment.questionId.toString() === questionId,
+    );
+
+    this.items = questionAttachaments;
   }
 }

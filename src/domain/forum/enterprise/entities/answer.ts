@@ -1,12 +1,14 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root.js';
 import type { UniqueEntityId } from '@/core/entities/unique-entity-id.js';
 import type { Optional } from '@/core/types/optional.js';
+import { AnswerAttachmentList } from './answer-attachment-list.js';
 
 export interface AnswerProps {
   authorId: UniqueEntityId;
   questionId: UniqueEntityId;
   content: string;
   createdAt: Date;
+  attachments: AnswerAttachmentList;
   updatedAt?: Date;
 }
 
@@ -21,6 +23,15 @@ export class Answer extends AggregateRoot<AnswerProps> {
 
   get content() {
     return this.props.content;
+  }
+
+  set attachments(attachments: AnswerAttachmentList) {
+    this.props.attachments = attachments;
+    this.touch();
+  }
+
+  get attachments() {
+    return this.props.attachments;
   }
 
   get createdAt() {
@@ -45,13 +56,14 @@ export class Answer extends AggregateRoot<AnswerProps> {
   }
 
   static create(
-    props: Optional<AnswerProps, 'createdAt'>,
+    props: Optional<AnswerProps, 'createdAt' | 'attachments'>,
     id?: UniqueEntityId,
   ) {
     const question = new Answer(
       {
         ...props,
         createdAt: new Date(),
+        attachments: props.attachments ?? new AnswerAttachmentList(),
       },
       id,
     );

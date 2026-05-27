@@ -16,9 +16,13 @@ describe('Answer Question', () => {
       instructorId: '1',
       questionId: '1',
       content: 'content',
+      attachmentsIds: ['1', '2'],
     });
 
     expect(result.isRight()).toBe(true);
     expect(inMemoryAnswerRepository.items[0]).toEqual(result.value?.answer);
+    expect(
+      inMemoryAnswerRepository.items[0]?.attachments.currentItems,
+    ).toHaveLength(2);
   });
 });
