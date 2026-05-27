@@ -16,13 +16,14 @@ describe('Create Question', () => {
       authorId: '1',
       content: 'content',
       title: 'title',
+      attachmentsIds: ['1', '2'],
     });
 
     expect(result.isRight()).toBe(true);
-    expect(result.value?.question.id).toBeTruthy();
-    expect(inMemoryQuestionRepository.items[0]?.id).toEqual(
-      result.value?.question.id,
-    );
-    expect(result.value?.question.content).toEqual('content');
+    expect(inMemoryQuestionRepository.items[0]).toEqual(result.value?.question);
+    expect(inMemoryQuestionRepository.items[0]?.attachments).toHaveLength(2);
+    expect(
+      inMemoryQuestionRepository.items[0]?.attachments[0]?.attachmentId.toValue(),
+    ).toEqual('1');
   });
 });
