@@ -15,7 +15,9 @@ describe('Edit Answer Use Case', () => {
   beforeEach(() => {
     inMemoryAnswersAttachmentsRepository =
       new InMemoryAnswerAttachmentsRepository();
-    inMemoryAnswersRepository = new InMemoryAnswersRepository();
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswersAttachmentsRepository,
+    );
     sut = new EditAnswerUseCase(
       inMemoryAnswersRepository,
       inMemoryAnswersAttachmentsRepository,
@@ -73,7 +75,7 @@ describe('Edit Answer Use Case', () => {
       authorId: 'author-02',
       content: 'content-new',
       answerId: 'answer-01',
-      attachmentsIds: ['1', '3'],
+      attachmentsIds: [],
     });
 
     expect(result.isLeft()).toBe(true);
