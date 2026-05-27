@@ -2,19 +2,31 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id.js';
 import { describe, it } from 'vitest';
 import { makeAnswer } from '../../../../../test/factories/make-answer.js';
 import { makeQuestion } from '../../../../../test/factories/make-question.js';
+import { InMemoryAnswerAttachmentsRepository } from '../../../../../test/repositories/in-memory-answer-attachments-repository.js';
 import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js';
+import { InMemoryQuestionAttachmentsRepository } from '../../../../../test/repositories/in-memory-question-attachments-repository.js';
 import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository.js';
 import { ChoseQuestionBestAnswerUseCase } from './chose-question-best-answer.js';
 import { NotAllowedError } from './errors/not-allowed-error.js';
 
 let inMemoryQuestionRepository: InMemoryQuestionsRepository;
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
+let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let sut: ChoseQuestionBestAnswerUseCase;
 
 describe('Create Question', () => {
   beforeEach(() => {
-    inMemoryQuestionRepository = new InMemoryQuestionsRepository();
-    inMemoryAnswersRepository = new InMemoryAnswersRepository();
+    inMemoryAnswerAttachmentsRepository =
+      new InMemoryAnswerAttachmentsRepository();
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository();
+    inMemoryQuestionRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    );
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    );
     sut = new ChoseQuestionBestAnswerUseCase(
       inMemoryQuestionRepository,
       inMemoryAnswersRepository,

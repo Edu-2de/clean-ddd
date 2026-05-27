@@ -1,20 +1,26 @@
 import { beforeEach, describe } from 'vitest';
 import { makeQuestionComment } from '../../../../../test/factories/make-question-comment.js';
 import { makeQuestion } from '../../../../../test/factories/make-question.js';
+import { InMemoryQuestionAttachmentsRepository } from '../../../../../test/repositories/in-memory-question-attachments-repository.js';
 import { InMemoryQuestionCommentsRepository } from '../../../../../test/repositories/in-memory-question-comments-repository.js';
 import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository.js';
 import { FetchQuestionComments } from './fetch-question-comments.js';
 
 let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository;
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let sut: FetchQuestionComments;
 
 describe('Fetch Question Answer Use Case', () => {
   beforeEach(() => {
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository();
     inMemoryQuestionCommentsRepository =
       new InMemoryQuestionCommentsRepository();
 
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    );
 
     sut = new FetchQuestionComments(inMemoryQuestionCommentsRepository);
   });

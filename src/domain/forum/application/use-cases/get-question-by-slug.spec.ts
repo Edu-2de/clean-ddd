@@ -1,15 +1,21 @@
 import { beforeEach, describe, it } from 'vitest';
 import { makeQuestion } from '../../../../../test/factories/make-question.js';
+import { InMemoryQuestionAttachmentsRepository } from '../../../../../test/repositories/in-memory-question-attachments-repository.js';
 import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository.js';
 import { Slug } from '../../enterprise/entities/value-objects/slug.js';
 import { GetQuestionBySlugUseCase } from './get-question-by-slug.js';
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let sut: GetQuestionBySlugUseCase;
 
 describe('Get Question By Slug Use Case', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository();
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    );
     sut = new GetQuestionBySlugUseCase(inMemoryQuestionsRepository);
   });
 

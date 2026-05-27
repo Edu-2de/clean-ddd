@@ -3,15 +3,21 @@ import { makeAnswer } from '../../../../../test/factories/make-answer.js';
 import { InMemoryAnswersCommentsRepository } from '../../../../../test/repositories/in-memory-answers-comments-repository.js';
 import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js';
 import { CommentOnAnswerUseCase } from './comment-on-answer.js';
+import { InMemoryAnswerAttachmentsRepository } from '../../../../../test/repositories/in-memory-answer-attachments-repository.js';
 
 let inMemoryAnswerCommentsRepository: InMemoryAnswersCommentsRepository;
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
+let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let sut: CommentOnAnswerUseCase;
 
 describe('Comment On Answer Use Case', () => {
   beforeEach(() => {
+    inMemoryAnswerAttachmentsRepository =
+      new InMemoryAnswerAttachmentsRepository();
     inMemoryAnswerCommentsRepository = new InMemoryAnswersCommentsRepository();
-    inMemoryAnswersRepository = new InMemoryAnswersRepository();
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    );
     sut = new CommentOnAnswerUseCase(
       inMemoryAnswersRepository,
       inMemoryAnswerCommentsRepository,
